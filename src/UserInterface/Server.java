@@ -1,8 +1,45 @@
 package UserInterface;
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.net.*;
 
+public class Server 
+{
+	final static boolean DEBUG = false;
+	final static int PORT = 444;
+		
+	public static void main(String []arg) 
+	{
+		try {
+			Server s = new Server(); 
+			s.run();
+		} catch (Exception e) {
+			System.out.print(e.getMessage());
+		}
+		System.out.print("Stoped!");
+	}
+	
+	public void run( ) throws Exception
+	{
+		ServerSocket sSocket = new ServerSocket(PORT);
+		Socket sock = sSocket.accept();
+		InputStreamReader inStream = new InputStreamReader(sock.getInputStream());
+		BufferedReader bReader = new BufferedReader(inStream);
+		
+		String message = bReader.readLine();
+		System.out.println("got from client: " + message);
+		
+		if (message != null) {
+			PrintStream ps = new PrintStream(sock.getOutputStream());
+			ps.println("Message recived!");
+		}
+		
+		sock.close();
+		sSocket.close();
+		
+	}
+}
+
+/*
 public class Server {
 	final static boolean DEBUG = false;
 	final static String LOG_FILE = "log.txt";
@@ -45,7 +82,7 @@ public class Server {
 	}
 	
 	public static void main(String[] args) {
-		startScreen();
+		 startScreen();
 		boolean runServer = true; 
 		while(runServer) {
 			// TRÅD 1
@@ -109,3 +146,4 @@ public class Server {
 		} 
 	}
 }
+*/

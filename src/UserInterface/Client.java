@@ -1,9 +1,40 @@
 package UserInterface;
-import Game.TicTackToeGame;
-import java.util.Scanner;
+import Game.TicTacToeGame;
 
-public class Client {
-	public static void main(String[] args) {
+import java.util.Scanner;
+import java.net.*;
+import java.io.*;
+
+public class Client 
+{
+	final static int PORT = 444;
+	
+	public static void main(String[] args) 
+	{
+		try {
+			Client c = new Client();
+			c.run();
+		} catch (Exception e) {
+			System.out.print(e.getMessage());
+		}
+	}
+	public void run() throws Exception 
+	{
+		Socket sock = new Socket("localhost", PORT);
+		PrintStream ps = new PrintStream(sock.getOutputStream());
+		ps.println("Hello to server from client");
+		
+		InputStreamReader ir = new InputStreamReader(sock.getInputStream());
+		BufferedReader br = new BufferedReader(ir);
+		String msg = br.readLine();
+		System.out.println(msg);
+		
+		sock.close();
+		
+	}
+	
+	
+	/*public static void main(String[] args) {
 		boolean playAgain = false;		
 		String player1 = "", player2 = "";
 		Scanner s = new Scanner(System.in);
@@ -45,5 +76,6 @@ public class Client {
 			}
 			
 		} while(playAgain);
-	}
+	}*/
 }
+
