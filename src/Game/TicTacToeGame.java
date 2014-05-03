@@ -1,7 +1,7 @@
 package Game;
 import java.util.Arrays;
 
-public class TicTackToeGame {
+public class TicTacToeGame {
 	private final static int SIZE = 3;
 	private final static char EMPTYBOX = ' ';
 	public final static char PLAYER1 = 'X';
@@ -23,10 +23,10 @@ public class TicTackToeGame {
 	private void setMarker(int row, int col, char mark) {
 		this.gameBoard[row][col] = mark;
 	}
-	public TicTackToeGame() {
+	public TicTacToeGame() {
 		this("Player1", "Player2");
 	}	
-	public TicTackToeGame(String player1, String player2) {
+	public TicTacToeGame(String player1, String player2) {
 		initGame();
 		this.players[0] = new Player(player1, 0);
 		this.players[1] = new Player(player2, 0);
@@ -134,7 +134,7 @@ public class TicTackToeGame {
 		players[1] = new Player(player1, 0);
 	}
 	public boolean isFull() {
-		return this.turns == SIZE * 3;
+		return this.turns == SIZE * SIZE;
 	}
 	/**
 	 * 
@@ -180,7 +180,7 @@ public class TicTackToeGame {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		TicTackToeGame other = (TicTackToeGame) obj;
+		TicTacToeGame other = (TicTacToeGame) obj;
 		if (!Arrays.deepEquals(gameBoard, other.gameBoard)) {
 			return false;
 		}
