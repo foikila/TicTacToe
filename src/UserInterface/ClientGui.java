@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import Game.TicTacToeGame;
+
 
 /**
  * 
@@ -25,15 +27,9 @@ public class ClientGui extends JFrame implements Serializable{
 	private class ButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			switch (e.getActionCommand()) {
-			case "x":
-				System.out.println("Du tryckte på: X");
-				break;
-			case "o":
-				System.out.println("Du tryckte på: O");
-			default:
-				break;
-			}
+			
+			placeMarks(e.getActionCommand().toString());
+			
 			
 		}
 		
@@ -71,15 +67,16 @@ public class ClientGui extends JFrame implements Serializable{
 	 * Javax.swings
 	 */	
 	private Container contentPane;
-	// TODO FIXA EGNA KNAPPAR? 
-	private JButton buttons[];
-	
+
 	private ImageIcon defaultIcon;
 	private ImageIcon iconPlayer1;
 	private ImageIcon iconPlayer2;
 	
 	private String frameTitle;
-	private JButton btn;
+	private JButton[][]btnArray;
+	
+	private TicTacToeGame game = new TicTacToeGame();
+	
 	
 	public ClientGui(String frameTitle) {
 		this.frameTitle = frameTitle;
@@ -90,28 +87,60 @@ public class ClientGui extends JFrame implements Serializable{
 		buildMenuBar();
 	}
 	
+	public void placeMarks(String e) {
+		int col = 0; int row = 0;
+		String values[] = e.split(",");
+		col = Integer.parseInt(values[0]);
+		row = Integer.parseInt(values[1]);
+		
+		//System.out.println("Col: "+ col);
+		//System.out.println("Row: " + row);
+		
+		
+		try {
+			game.placeMarker(row, col);
+		} catch (Exception e1) {
+			// Gör någon felhantering.
+			this.btnArray[row][col].setEnabled(false);
+		}
+		
+		// Validera
+		if(game.validate()) {
+			System.out.println(game.getWhoWon());
+			System.out.println("Nr of turns played: " + game.getTurns());
+		}
+		
+	}
+
 	private JPanel buildButtons() {
 		JPanel buttonArea = new JPanel();
 		buttonArea.setLayout(new GridLayout(3, 3));
 		
 		//JButton btn;
 		ButtonListener btnListener = new ButtonListener();
-		
-		for (int i = 0; i < 9; i++) {
+		int colCount = 0;
+		int rowCount = 0;
+		for (int i = 0; i < this.btnArray.length; i++) {
 			
-			this.btn = new JButton();
-			this.btn.setSize(100, 100);
-			this.btn.addActionListener(btnListener);
-			//this.btn.setText(Integer.toString(i));
-			if(i % 2 == 0) {
-				this.btn.setIcon(this.iconPlayer1);
-				this.btn.setActionCommand("x");
-				//btn.setText("X");
-			} else {
-				this.btn.setIcon(this.iconPlayer2);
-				this.btn.setActionCommand("o");
+			for (int j = 0; j < this.btnArray.length; j++) {
+				this.btnArray[i][j] = new JButton();
+				this.btnArray[i][j].setSize(100, 100);
+				this.btnArray[i][j].addActionListener(btnListener);
+				this.btnArray[i][j].setActionCommand(Integer.toString(rowCount) + "," + Integer.toString(colCount));
+				if(i % 2 == 0) 
+					this.btnArray[i][j].setIcon(this.iconPlayer1);
+				 else 
+					this.btnArray[i][j].setIcon(this.iconPlayer2);
+								
+				buttonArea.add(this.btnArray[i][j]);
+				
+				if(rowCount == 2) {
+					rowCount = -1;
+					colCount++;
+				}
+				rowCount++;
 			}
-			buttonArea.add(this.btn);	
+			
 		}
 		
 		return buttonArea;
@@ -154,6 +183,8 @@ public class ClientGui extends JFrame implements Serializable{
 		// Icons
 		this.iconPlayer1 = new ImageIcon(System.getProperty("user.dir") + "/Images/x.png");
 		this.iconPlayer2 = new ImageIcon(System.getProperty("user.dir") + "/Images/o.png");
+		
+		this.btnArray = new JButton[3][3];
 	}
 
 	private void addComponentsToContentPane() {
@@ -170,7 +201,7 @@ public class ClientGui extends JFrame implements Serializable{
 	}
 	
 	public static void main(String args[]) {
-		ClientGui gui = new ClientGui("Gui");
+		ClientGui gui = new ClientGui("Tic-Tac-Toe");
 		gui.setVisible(true);
 	}
 }
