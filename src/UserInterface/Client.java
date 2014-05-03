@@ -1,13 +1,14 @@
 package UserInterface;
-import Game.TicTacToeGame;
+//import Game.TicTacToeGame;
 
-import java.util.Scanner;
+//import java.util.Scanner;
 import java.net.*;
 import java.io.*;
 
 public class Client 
 {
 	final static int PORT = 444;
+	final static String HOST = "10.0.0.166";
 	
 	public static void main(String[] args) 
 	{
@@ -20,7 +21,7 @@ public class Client
 	}
 	public void run() throws Exception 
 	{
-		Socket sock = new Socket("localhost", PORT);
+		Socket sock = new Socket(HOST, PORT);
 		PrintStream ps = new PrintStream(sock.getOutputStream());
 		ps.println("Hello to server from client");
 		
