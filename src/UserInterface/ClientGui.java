@@ -83,11 +83,13 @@ public class ClientGui extends JFrame implements Serializable {
 					// Update gui.
 					updateGraphicalGameBoard(row, col);
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.out.println("Row: " + row + " Col: " + col
+							+ " was already taken.");
 				}
 			} catch (IOException | ClassNotFoundException e1) {
 				e1.printStackTrace();
 			}
+			System.out.println(game.gameBoardToString());
 			disableButtons(false);
 			amISending = true;
 		}
@@ -122,11 +124,14 @@ public class ClientGui extends JFrame implements Serializable {
 				String values[] = e.getActionCommand().toString().split(",");
 				col = Integer.parseInt(values[0]);
 				row = Integer.parseInt(values[1]);
+				game.placeMarker(row, col);
 
 				try {
 					oos = new ObjectOutputStream(clientSocket.getOutputStream());
 					Network.Package p = new Network.Package(row, col);
 					System.out.println("Sending: " + p);
+					System.out.println(game.gameBoardToString());
+
 					// sending an object to the server
 					oos.writeObject(p);
 				} catch (IOException ex) {
