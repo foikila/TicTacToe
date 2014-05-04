@@ -28,9 +28,13 @@ public class Server {
 				try {
 					// starts listening to the server socket
 					Socket socket = server.accept();
-					// Opens the stream from the socket
-					ObjectInputStream ois = new ObjectInputStream(
-							socket.getInputStream());
+					/*
+					 * // returns hello ObjectOutputStream oos = new
+					 * ObjectOutputStream( socket.getOutputStream());
+					 * oos.writeObject("Welcome...");
+					 * System.out.println("Sent hello");
+					 */
+					// listData.add(new Network.Package(-1, -1));
 					// Adds the socket to
 					listSockets.add(socket);
 
@@ -52,6 +56,7 @@ public class Server {
 						// gets the output stream
 						oos = new ObjectOutputStream(listSockets.get(i)
 								.getOutputStream());
+						System.out.println("Sending new data");
 						// writes to the stream
 						oos.writeObject(listData);
 					} catch (IOException e) {
@@ -72,7 +77,7 @@ public class Server {
 					try {
 						ois = new ObjectInputStream(listSockets.get(i)
 								.getInputStream());
-
+						System.out.println("Kom hit");
 						Package p = (Package) ois.readObject();
 						System.out.println("Got new data: " + p.toString());
 						listData.set(i, p);
