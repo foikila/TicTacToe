@@ -7,7 +7,7 @@ An assignments in ET1447 VT 2014 at Blekinge Institute of Technology
 
 Coded by
 --------
-Jonatan Karlsson
+Jonatan Karlsson         
 Henrik Ölund
 
 
