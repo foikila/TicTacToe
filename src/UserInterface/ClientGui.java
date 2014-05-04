@@ -1,5 +1,10 @@
 package UserInterface;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.channels.NetworkChannel;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -21,20 +26,97 @@ import Game.TicTacToeGame;
  * @version 0.1
  */
 public class ClientGui extends JFrame implements Serializable{
-	// TODO auto generate this
 	private static final long serialVersionUID = 1L;
+	/**
+	 *  Constant for easy configuration  
+	 */
+	private static final boolean RESIZEBLE = false;
+	private static final int DEFAULT_CLOSE_OPERATION = WindowConstants.EXIT_ON_CLOSE;
 	
+	
+	/**
+	 * Javax.swings
+	 */	
+	private Container contentPane;
+	private ImageIcon iconPlayer1;
+	private ImageIcon iconPlayer2;
+	private String frameTitle;
+	private JButton[][]btnArray;
+	
+	/**
+	 *  Game stuff
+	 */
+	private static TicTacToeGame game;
+	
+	/**
+	 * Server client stuff
+	 */
+	private static ServerSocket serverSocket;
+	private static Socket clientSocket;
+	private Package sendPackage;
+
+	
+	/**
+	 * Runnables
+	 */
+	private Runnable waiting = new Runnable() {
+		@Override
+		public void run() {
+			// disable buttons
+			changeButtons(false);
+			
+			// Get object from enemy
+			ObjectInputStream ois;	
+			int row = -1; 
+			int col = -1; 
+			try {
+				ois = new ObjectInputStream(clientSocket.getInputStream());	
+				Network.Package p = (Network.Package)ois.readObject();
+				row = p.getRow();
+				col = p.getCol();
+			} catch (IOException | ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			
+			
+			try {
+				// Place markers from enemy
+				game.placeMarker(row, col);
+				
+				// Update gui.
+				updateGraphicalGameBoard(row, col);
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+				
+			
+			// Visa att det är användarens tur och enablea knappar
+			changeButtons(true);
+			System.out.println("Det är din tur...");
+		}
+	};
+	
+	/**
+	 * Button Listener
+	 * @author olund
+	 *
+	 */
 	private class ButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			placeMarks(e.getActionCommand().toString());
-			
-			
+			//placeMarks(e.getActionCommand().toString());
+			play();
 		}
 		
 	}
 	
+	/**
+	 * MenuListener
+	 * @author olund
+	 *
+	 */
 	private class MenuListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -52,32 +134,48 @@ public class ClientGui extends JFrame implements Serializable{
 			
 		
 		}
-		
+			
 	}
 	
-	
+	public void play() {
+		try {
+			// Connectar till servern
+			clientSocket = new Socket("10.0.0.166", 444);
+			
+			// Skapa ny tråd
+			new Thread(waiting).start();
+						
+			
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "ALERT", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
+	}
 	
 	/**
-	 *  Constant for easy configuration  
+	 * Sets the icon of the buttons.
+	 * @param row
+	 * @param col
 	 */
-	private static final boolean RESIZEBLE = false;
-	private static final int DEFAULT_CLOSE_OPERATION = WindowConstants.EXIT_ON_CLOSE;
+	public void updateGraphicalGameBoard(int row, int col) {
+		if(game.getTurns() % 2 == 0)
+			this.btnArray[row][col].setIcon(iconPlayer1);
+		 else 
+			this.btnArray[row][col].setIcon(iconPlayer2);
+	}
 	
 	/**
-	 * Javax.swings
-	 */	
-	private Container contentPane;
+	 * Sets the buttons to enable/disable
+	 * @param on
+	 */
+	private void changeButtons(Boolean on) {
+		for (int i = 0; i < this.btnArray.length; i++) {
+			for (int j = 0; j < this.btnArray.length; j++) {
+				this.btnArray[i][j].setEnabled(on);
+			}
+		}
+	}
 
-	private ImageIcon defaultIcon;
-	private ImageIcon iconPlayer1;
-	private ImageIcon iconPlayer2;
-	
-	private String frameTitle;
-	private JButton[][]btnArray;
-	
-	private TicTacToeGame game = new TicTacToeGame();
-	
-	
 	public ClientGui(String frameTitle) {
 		this.frameTitle = frameTitle;
 		
@@ -96,6 +194,7 @@ public class ClientGui extends JFrame implements Serializable{
 		//System.out.println("Col: "+ col);
 		//System.out.println("Row: " + row);
 		
+		// Om man väntar (waiting) så ska man ej kunna placera markers.
 		
 		try {
 			game.placeMarker(row, col);
@@ -112,6 +211,10 @@ public class ClientGui extends JFrame implements Serializable{
 		
 	}
 
+	/**
+	 * Builds the buttons for the game
+	 * @return
+	 */
 	private JPanel buildButtons() {
 		JPanel buttonArea = new JPanel();
 		buttonArea.setLayout(new GridLayout(3, 3));
@@ -146,6 +249,9 @@ public class ClientGui extends JFrame implements Serializable{
 		return buttonArea;
 	}
 	
+	/**
+	 * Builds the menu bar
+	 */
 	private void buildMenuBar() {
 		JMenuBar bar = new JMenuBar();
 		JMenu gameMenu = new JMenu("Game");
@@ -174,7 +280,9 @@ public class ClientGui extends JFrame implements Serializable{
 		this.setJMenuBar(bar);
 	}
 	
-
+	/**
+	 * Initiate instance variables
+	 */
 	private void initiateInstanceVaribales() {
 		this.contentPane = this.getContentPane();
 		//this.contentPane.setLayout(null);
@@ -185,12 +293,19 @@ public class ClientGui extends JFrame implements Serializable{
 		this.iconPlayer2 = new ImageIcon(System.getProperty("user.dir") + "/Images/o.png");
 		
 		this.btnArray = new JButton[3][3];
+		this.game = new TicTacToeGame();
 	}
 
+	/**
+	 * Add components to the pane.
+	 */
 	private void addComponentsToContentPane() {
 		this.contentPane.add(buildButtons());
 	}
 	
+	/**
+	 * Configure the frame.
+	 */
 	private void configFrame() {
 		this.setTitle(this.frameTitle);
 		//this.setBounds(100,100,600,600);
