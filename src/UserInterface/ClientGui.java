@@ -49,44 +49,42 @@ public class ClientGui extends JFrame implements Serializable {
 	private boolean isClient;
 	private int port;
 	private String ip;
+	private boolean amISending;
+
 	/**
 	 * Runnables
+	 */
+	/*
+	 * 
 	 */
 	private Runnable waiting = new Runnable() {
 		@Override
 		public void run() {
-			// disable buttons
-			disableButtons(true);
-
 			// Get object from enemy
 			ObjectInputStream ois;
 			int row = -1;
 			int col = -1;
 			try {
 				ois = new ObjectInputStream(clientSocket.getInputStream());
+				// gets package
 				Network.Package p = (Network.Package) ois.readObject();
+				System.out.println("Recived datapaketet\n" + p);
+
 				row = p.getRow();
 				col = p.getCol();
-				System.out.println("Läste paketet");
-				System.out.println(p.toString());
+				try {
+					// Place markers from enemy
+					game.placeMarker(row, col);
+					// Update gui.
+					updateGraphicalGameBoard(row, col);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			} catch (IOException | ClassNotFoundException e1) {
 				e1.printStackTrace();
 			}
-
-			try {
-				// Place markers from enemy
-				game.placeMarker(row, col);
-
-				// Update gui.
-				updateGraphicalGameBoard(row, col);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			// Visa att det är användarens tur och enablea knappar
 			disableButtons(false);
-			System.out.println("Det är din tur...");
+			amISending = true;
 		}
 	};
 
@@ -96,7 +94,6 @@ public class ClientGui extends JFrame implements Serializable {
 			try {
 				clientSocket = serverSocket.accept();
 			} catch (IOException e) {
-				System.out.println("Clientsocket acceptar serversocket");
 				e.printStackTrace();
 			}
 		}
@@ -109,11 +106,37 @@ public class ClientGui extends JFrame implements Serializable {
 	private class ButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			try {
+				ObjectOutputStream oos;
+				int col = 0;
+				int row = 0;
 
-			// placeMarks(e.getActionCommand().toString());
-			play(e.getActionCommand().toString());
+				String values[] = e.getActionCommand().toString().split(",");
+				col = Integer.parseInt(values[0]);
+				row = Integer.parseInt(values[1]);
+
+				try {
+					oos = new ObjectOutputStream(clientSocket.getOutputStream());
+					Network.Package p = new Network.Package(row, col);
+					System.out.println("Sending: " + p);
+					// sending an object to the server
+					oos.writeObject(p);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				// changes the state
+				amISending = false;
+				disableButtons(true);
+				// Skapa ny tråd
+				new Thread(waiting).start();
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				System.exit(0);
+			}
+
+			nextStep();
 		}
-
 	}
 
 	private class MenuListener implements ActionListener {
@@ -133,49 +156,8 @@ public class ClientGui extends JFrame implements Serializable {
 		}
 	}
 
-	public void play(String e) {
-		if (this.isClient) {
-			try {
-				// Connectar till servern
-				clientSocket = new Socket(this.ip, this.port);
-				ObjectOutputStream oos;
-				int col = 0;
-				int row = 0;
+	public void nextStep() {
 
-				String values[] = e.split(",");
-				col = Integer.parseInt(values[0]);
-				row = Integer.parseInt(values[1]);
-
-				try {
-					oos = new ObjectOutputStream(clientSocket.getOutputStream());
-					Network.Package p = new Network.Package(row, col);
-					System.out.println("Sending: " + p);
-					// sending an object to the server
-					oos.writeObject(p);
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-
-				// Skapa ny tråd
-				new Thread(waiting).start();
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				JOptionPane.showMessageDialog(this,
-						"Error: " + ex.getMessage(), "ALERT",
-						JOptionPane.ERROR_MESSAGE);
-				System.exit(0);
-			}
-		} else {
-			// Im host
-			try {
-				serverSocket = new ServerSocket(this.port);
-				new Thread(accept).start();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				System.exit(0);
-			}
-		}
 	}
 
 	/**
@@ -201,7 +183,6 @@ public class ClientGui extends JFrame implements Serializable {
 		on = on == false ? true : false;
 		for (int i = 0; i < this.btnArray.length; i++) {
 			for (int j = 0; j < this.btnArray.length; j++) {
-				System.out.println(on);
 				this.btnArray[i][j].setEnabled(on);
 			}
 		}
@@ -209,12 +190,28 @@ public class ClientGui extends JFrame implements Serializable {
 
 	public ClientGui(String frameTitle) {
 		this.frameTitle = frameTitle;
-
 		initiateInstanceVaribales();
 		configFrame();
 		addComponentsToContentPane();
 		buildMenuBar();
 		getIfServer();
+
+		try {
+			System.out.println("kjadas");
+			if (this.isClient) {
+				clientSocket = new Socket(this.ip, this.port);
+			} else {
+				serverSocket = new ServerSocket(this.port);
+				new Thread(accept).start();
+				new Thread(waiting).start();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(),
+					"ALERT", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
+
 	}
 
 	private void getIfServer() {
@@ -222,15 +219,17 @@ public class ClientGui extends JFrame implements Serializable {
 		switch (an) {
 		case JOptionPane.OK_OPTION:
 			this.isClient = false;
+
+			this.amISending = false;
 			// get ip and port and stuff
 			String ans = JOptionPane.showInputDialog("Host ip:");
 			this.ip = ans;
 			ans = JOptionPane.showInputDialog("Host port:");
 			this.port = Integer.parseInt(ans);
-
 			break;
 		default:
 		case JOptionPane.NO_OPTION:
+			this.amISending = true;
 			try {
 				JOptionPane.showMessageDialog(this, "Your ip is "
 						+ Inet4Address.getLocalHost().getHostAddress()
