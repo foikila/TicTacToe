@@ -11,11 +11,11 @@ public class Package implements Serializable {
 	private int row;
 	private int col;
 
-	Package(int row, int col) {
+	public Package(int row, int col) {
 		this(row, col, new Player());
 	}
 
-	Package(int row, int col, Player player) {
+	public Package(int row, int col, Player player) {
 		this.row = row;
 		this.col = col;
 		this.player = player;
