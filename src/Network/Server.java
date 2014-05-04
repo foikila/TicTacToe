@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Server {
 	public static int port = 444;
@@ -18,11 +19,10 @@ public class Server {
 	private static Runnable accept = new Runnable() {
 		@Override
 		public void run() {
-			System.out.println("accept called");
 			// starts the send thread
 			new Thread(send).start();
-			// Starts the recive thread
-			new Thread(recive).start();
+			// Starts the receive thread
+			new Thread(receive).start();
 
 			while (true) {
 				try {
@@ -42,16 +42,14 @@ public class Server {
 	};
 
 	private static Runnable send = new Runnable() {
-
 		@Override
 		public void run() {
-			System.out.println("send called");
 			while (true) {
 				ObjectOutputStream oos;
 				// makes sure that I don't start to many
 				for (int i = 0; i < listSockets.size(); i++) {
 					try {
-						// gets the outputstream
+						// gets the output stream
 						oos = new ObjectOutputStream(listSockets.get(i)
 								.getOutputStream());
 						// writes to the stream
@@ -65,11 +63,9 @@ public class Server {
 		}
 	};
 
-	private static Runnable recive = new Runnable() {
-
+	private static Runnable receive = new Runnable() {
 		@Override
 		public void run() {
-			System.out.println("recive called");
 			ObjectInputStream ois;
 			while (true) {
 				for (int i = 0; i < listSockets.size(); i++) {
@@ -78,7 +74,7 @@ public class Server {
 								.getInputStream());
 
 						Package p = (Package) ois.readObject();
-
+						System.out.println("Got new data: " + p.toString());
 						listData.set(i, p);
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
@@ -93,13 +89,14 @@ public class Server {
 	};
 
 	public static void main(String[] args) {
-		System.out.println("klasndkamkla");
+		Date d = new Date();
+		System.out.println("Welcome human\nServer has now started..... \n" + d);
 		try {
 			server = new ServerSocket(port);
 			// starts to listen
 			new Thread(accept).start();
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
