@@ -33,7 +33,11 @@ public class TicTacToeGame {
 	 * @return the marker of the player whose turn it is
 	 */
 	private char getWhoseMarker(int who) {
-		return turns % 2 == 0 ? PLAYER1 : PLAYER2;
+		if (who == 0) {
+			return PLAYER1;
+		} else {
+			return PLAYER2;
+		}
 	}
 
 	public TicTacToeGame() {
@@ -74,9 +78,11 @@ public class TicTacToeGame {
 		}
 		return returnStr;
 	}
+
 	public char getMarker(int row, int col) {
 		return this.gameBoard[row][col];
 	}
+
 	/**
 	 * Checks whether [row][col] is empty and places a new Mark there.
 	 * 
@@ -116,23 +122,20 @@ public class TicTacToeGame {
 		boolean win = false;
 		for (int player = 0; player < NR_OF_PLAYERS - 1 && !win; player++) {
 			mark = this.getWhoseMarker(player);
-			// TODO validate that this is true! :@
+
 			for (int row = 0; row < SIZE; row++) {
+
 				if (this.gameBoard[row][0] == mark
 						&& this.gameBoard[row][1] == mark
 						&& this.gameBoard[row][2] == mark) {
-					// horizontal
 					win = true;
 				} else if (this.gameBoard[0][row] == mark
 						&& this.gameBoard[1][row] == mark
-						&& this.gameBoard[1][row] == mark
 						&& this.gameBoard[2][row] == mark) {
-					// vertical
 					win = true;
 				}
 			}
 			// diagonal
-			// TODO validate that this is true! :@
 			if (this.gameBoard[0][0] == mark && this.gameBoard[1][1] == mark
 					&& this.gameBoard[2][2] == mark) {
 				win = true;
@@ -142,7 +145,7 @@ public class TicTacToeGame {
 				win = true;
 			}
 			if (win) {
-				this.winner = this.players[player].getName() + " won the game!";
+				this.winner = "O won the game!";
 			}
 		}
 		return win;

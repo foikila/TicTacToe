@@ -60,6 +60,7 @@ public class ClientGui extends JFrame implements Serializable {
 	private Runnable waiting = new Runnable() {
 		@Override
 		public void run() {
+
 			// Get object from enemy
 			Network.Package p;
 			int row = -1;
@@ -73,8 +74,6 @@ public class ClientGui extends JFrame implements Serializable {
 					p = (Network.Package) ois.readObject();
 				} while (p == null);
 
-				System.out.println("Recived datapaketet\n" + p);
-
 				row = p.getRow();
 				col = p.getCol();
 				try {
@@ -82,6 +81,11 @@ public class ClientGui extends JFrame implements Serializable {
 					game.placeMarker(row, col);
 					// Update gui.
 					updateGraphicalGameBoard();
+					if (game.validate()) {
+						JOptionPane.showMessageDialog(null, game.getWhoWon()
+								+ "won!!!!!!");
+						System.exit(0);
+					}
 				} catch (Exception e) {
 					System.out.println("Row: " + row + " Col: " + col
 							+ " was already taken.");
@@ -116,20 +120,27 @@ public class ClientGui extends JFrame implements Serializable {
 	private class ButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+
 			try {
 				ObjectOutputStream oos;
 				int col = 0;
 				int row = 0;
 
+				updateGraphicalGameBoard();
+				if (game.validate()) {
+					JOptionPane.showMessageDialog(null, game.getWhoWon()
+							+ "won!!!!!!");
+					System.exit(0);
+				}
 				String values[] = e.getActionCommand().toString().split(",");
 				col = Integer.parseInt(values[0]);
 				row = Integer.parseInt(values[1]);
-				game.placeMarker(row, col);
 
+				game.placeMarker(row, col);
+				updateGraphicalGameBoard();
 				try {
 					oos = new ObjectOutputStream(clientSocket.getOutputStream());
 					Network.Package p = new Network.Package(row, col);
-					System.out.println("Sending: " + p);
 					System.out.println(game.gameBoardToString());
 
 					// sending an object to the server
@@ -177,9 +188,9 @@ public class ClientGui extends JFrame implements Serializable {
 		for (int row = 0; row < btnArray.length; row++) {
 			for (int col = 0; col < btnArray.length; col++) {
 				char temp = game.getMarker(row, col);
-				if (temp == game.PLAYER1) {
+				if (temp == TicTacToeGame.PLAYER1) {
 					this.btnArray[row][col].setIcon(iconPlayer1);
-				} else if (temp == game.PLAYER2) {
+				} else if (temp == TicTacToeGame.PLAYER2) {
 					this.btnArray[row][col].setIcon(iconPlayer2);
 				} else {
 					this.btnArray[row][col].setIcon(iconDefault);
