@@ -44,8 +44,8 @@ public class ClientGui extends JFrame implements Serializable {
 	/**
 	 * Server client stuff
 	 */
-	private static ServerSocket serverSocket;
-	private static Socket clientSocket;
+	private ServerSocket serverSocket;
+	private Socket clientSocket;
 	private boolean isClient;
 	private int port;
 	private String ip;
@@ -61,13 +61,18 @@ public class ClientGui extends JFrame implements Serializable {
 		@Override
 		public void run() {
 			// Get object from enemy
-			ObjectInputStream ois;
+			Network.Package p;
 			int row = -1;
 			int col = -1;
 			try {
-				ois = new ObjectInputStream(clientSocket.getInputStream());
+
+				ObjectInputStream ois = new ObjectInputStream(
+						clientSocket.getInputStream());
 				// gets package
-				Network.Package p = (Network.Package) ois.readObject();
+				do {
+					p = (Network.Package) ois.readObject();
+				} while (p == null);
+
 				System.out.println("Recived datapaketet\n" + p);
 
 				row = p.getRow();
@@ -94,9 +99,11 @@ public class ClientGui extends JFrame implements Serializable {
 			try {
 				System.out.print(clientSocket);
 				clientSocket = serverSocket.accept();
+				System.out.println(clientSocket.toString());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			new Thread(waiting).start();
 		}
 	};
 
