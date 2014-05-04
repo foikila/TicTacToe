@@ -74,7 +74,9 @@ public class TicTacToeGame {
 		}
 		return returnStr;
 	}
-
+	public char getMarker(int row, int col) {
+		return this.gameBoard[row][col];
+	}
 	/**
 	 * Checks whether [row][col] is empty and places a new Mark there.
 	 * 
