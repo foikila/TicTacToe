@@ -82,8 +82,7 @@ public class ClientGui extends JFrame implements Serializable {
 					// Update gui.
 					updateGraphicalGameBoard();
 					if (game.validate()) {
-						JOptionPane.showMessageDialog(null, game.getWhoWon()
-								+ "won!!!!!!");
+						JOptionPane.showMessageDialog(null, game.getWhoWon());
 						System.exit(0);
 					}
 				} catch (Exception e) {
@@ -128,8 +127,7 @@ public class ClientGui extends JFrame implements Serializable {
 
 				updateGraphicalGameBoard();
 				if (game.validate()) {
-					JOptionPane.showMessageDialog(null, game.getWhoWon()
-							+ "won!!!!!!");
+					JOptionPane.showMessageDialog(null, game.getWhoWon());
 					System.exit(0);
 				}
 				String values[] = e.getActionCommand().toString().split(",");
@@ -137,6 +135,10 @@ public class ClientGui extends JFrame implements Serializable {
 				row = Integer.parseInt(values[1]);
 
 				game.placeMarker(row, col);
+				if (game.validate()) {
+					JOptionPane.showMessageDialog(null, game.getWhoWon());
+					System.exit(0);
+				}
 				updateGraphicalGameBoard();
 				try {
 					oos = new ObjectOutputStream(clientSocket.getOutputStream());

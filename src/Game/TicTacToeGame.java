@@ -145,7 +145,7 @@ public class TicTacToeGame {
 				win = true;
 			}
 			if (win) {
-				this.winner = "O won the game!";
+				this.winner = "Someone won!";
 			}
 		}
 		return win;
