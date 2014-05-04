@@ -3,11 +3,15 @@ package Game;
 public class Player {
 	private String name;
 	private int score;
-	
+
 	public Player(String name, int score) {
 		super();
 		this.name = name;
 		this.score = score;
+	}
+
+	public Player() {
+		this("", -1);
 	}
 
 	/**
@@ -18,7 +22,8 @@ public class Player {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -30,12 +35,14 @@ public class Player {
 	public int getScore() {
 		return score;
 	}
-	
+
 	public void increaseScore(int sum) {
 		score += sum;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -43,7 +50,9 @@ public class Player {
 		return "Player [name=" + name + ", score=" + score + "]";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -55,7 +64,9 @@ public class Player {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -82,5 +93,5 @@ public class Player {
 		}
 		return true;
 	}
-	
+
 }
