@@ -92,6 +92,7 @@ public class ClientGui extends JFrame implements Serializable {
 		@Override
 		public void run() {
 			try {
+				System.out.print(clientSocket);
 				clientSocket = serverSocket.accept();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -134,8 +135,6 @@ public class ClientGui extends JFrame implements Serializable {
 				ex.printStackTrace();
 				System.exit(0);
 			}
-
-			nextStep();
 		}
 	}
 
@@ -154,10 +153,6 @@ public class ClientGui extends JFrame implements Serializable {
 				break;
 			}
 		}
-	}
-
-	public void nextStep() {
-
 	}
 
 	/**
@@ -197,13 +192,12 @@ public class ClientGui extends JFrame implements Serializable {
 		getIfServer();
 
 		try {
-			System.out.println("kjadas");
 			if (this.isClient) {
+				System.out.println(this.ip + " " + this.port);
 				clientSocket = new Socket(this.ip, this.port);
 			} else {
 				serverSocket = new ServerSocket(this.port);
 				new Thread(accept).start();
-				new Thread(waiting).start();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -211,16 +205,14 @@ public class ClientGui extends JFrame implements Serializable {
 					"ALERT", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
-
 	}
 
 	private void getIfServer() {
 		int an = JOptionPane.showConfirmDialog(null, "Connecting to someone?");
 		switch (an) {
 		case JOptionPane.OK_OPTION:
-			this.isClient = false;
-
-			this.amISending = false;
+			this.isClient = true;
+			this.amISending = true;
 			// get ip and port and stuff
 			String ans = JOptionPane.showInputDialog("Host ip:");
 			this.ip = ans;
@@ -229,7 +221,8 @@ public class ClientGui extends JFrame implements Serializable {
 			break;
 		default:
 		case JOptionPane.NO_OPTION:
-			this.amISending = true;
+			this.amISending = false;
+			this.port = 4444;
 			try {
 				JOptionPane.showMessageDialog(this, "Your ip is "
 						+ Inet4Address.getLocalHost().getHostAddress()
@@ -238,7 +231,7 @@ public class ClientGui extends JFrame implements Serializable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			this.isClient = true;
+			this.isClient = false;
 			this.disableButtons(true);
 			break;
 		}
@@ -275,7 +268,6 @@ public class ClientGui extends JFrame implements Serializable {
 				}
 				rowCount++;
 			}
-
 		}
 
 		return buttonArea;
