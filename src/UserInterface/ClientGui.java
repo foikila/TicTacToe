@@ -177,14 +177,15 @@ public class ClientGui extends JFrame implements Serializable {
 		for (int row = 0; row < btnArray.length; row++) {
 			for (int col = 0; col < btnArray.length; col++) {
 				char temp = game.getMarker(row, col);
-				if (temp == 'x') {
+				if (temp == game.PLAYER1) {
 					this.btnArray[row][col].setIcon(iconPlayer1);
-				} else {
+				} else if (temp == game.PLAYER2) {
 					this.btnArray[row][col].setIcon(iconPlayer2);
+				} else {
+					this.btnArray[row][col].setIcon(iconDefault);
 				}
 			}
 		}
-
 	}
 
 	/**
