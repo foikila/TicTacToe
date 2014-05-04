@@ -81,7 +81,7 @@ public class ClientGui extends JFrame implements Serializable {
 					// Place markers from enemy
 					game.placeMarker(row, col);
 					// Update gui.
-					updateGraphicalGameBoard(row, col);
+					updateGraphicalGameBoard();
 				} catch (Exception e) {
 					System.out.println("Row: " + row + " Col: " + col
 							+ " was already taken.");
@@ -173,11 +173,18 @@ public class ClientGui extends JFrame implements Serializable {
 	 * @param row
 	 * @param col
 	 */
-	public void updateGraphicalGameBoard(int row, int col) {
-		if (game.getTurns() % 2 == 0)
-			this.btnArray[row][col].setIcon(iconPlayer1);
-		else
-			this.btnArray[row][col].setIcon(iconPlayer2);
+	public void updateGraphicalGameBoard() {
+		for (int row = 0; row < btnArray.length; row++) {
+			for (int col = 0; col < btnArray.length; col++) {
+				char temp = game.getMarker(row, col);
+				if (temp == 'x') {
+					this.btnArray[row][col].setIcon(iconPlayer1);
+				} else {
+					this.btnArray[row][col].setIcon(iconPlayer2);
+				}
+			}
+		}
+
 	}
 
 	/**
