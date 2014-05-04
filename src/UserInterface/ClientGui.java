@@ -1,6 +1,7 @@
 package UserInterface;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,6 +14,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
+import sun.net.NetworkClient;
 import Game.TicTacToeGame;
 
 
@@ -53,7 +57,6 @@ public class ClientGui extends JFrame implements Serializable{
 	 */
 	private static ServerSocket serverSocket;
 	private static Socket clientSocket;
-	private Package sendPackage;
 
 	
 	/**
@@ -70,10 +73,13 @@ public class ClientGui extends JFrame implements Serializable{
 			int row = -1; 
 			int col = -1; 
 			try {
+				System.out.println("Kom hit yolo");
 				ois = new ObjectInputStream(clientSocket.getInputStream());	
 				Network.Package p = (Network.Package)ois.readObject();
 				row = p.getRow();
 				col = p.getCol();
+				System.out.println("Läste paketet");
+				System.out.println(p.toString());
 			} catch (IOException | ClassNotFoundException e1) {
 				e1.printStackTrace();
 			}
@@ -94,6 +100,18 @@ public class ClientGui extends JFrame implements Serializable{
 			// Visa att det är användarens tur och enablea knappar
 			changeButtons(true);
 			System.out.println("Det är din tur...");
+		}
+	};
+	
+	private Runnable accept = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				clientSocket = serverSocket.accept();
+			} catch (IOException e) {
+				System.out.println("Clientsocket acceptar serversocket");
+				e.printStackTrace();
+			}
 		}
 	};
 	
@@ -140,16 +158,30 @@ public class ClientGui extends JFrame implements Serializable{
 	public void play() {
 		try {
 			// Connectar till servern
-			clientSocket = new Socket("10.0.0.166", 444);
+			//clientSocket = new Socket("10.0.0.166", 444);
+			System.out.println("Connectar till socket: skapar ny tråd");
+			
+			
+			// test skicka
+			ObjectOutputStream oos;
+
+			try {
+				oos = new ObjectOutputStream(clientSocket.getOutputStream());
+				oos.writeObject(new Network.Package(1,1));
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 			
 			// Skapa ny tråd
 			new Thread(waiting).start();
-						
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "ALERT", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
+		System.out.println("Efter waiting");
 	}
 	
 	/**
@@ -271,6 +303,11 @@ public class ClientGui extends JFrame implements Serializable{
 		profileMenu.add(item);
 		
 		// GAME SETTINGS:
+		// Set server
+		item = new JMenuItem("Set server");
+		gameMenu.add(item);
+		item.addActionListener(menuListener);
+		
 		// Reset Game
 		item = new JMenuItem("Reset game");
 		gameMenu.add(item);
