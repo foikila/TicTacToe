@@ -1,4 +1,5 @@
 package Game;
+
 import java.util.Arrays;
 
 public class TicTacToeGame {
@@ -7,15 +8,17 @@ public class TicTacToeGame {
 	public final static char PLAYER1 = 'X';
 	public final static char PLAYER2 = 'O';
 	private final static int NR_OF_PLAYERS = 2;
-	
+
 	private String winner;
-	private int turns = 0;	
-    // The full game board.
+	private int turns = 0;
+	// The full game board.
 	private char[][] gameBoard;
 	// Players
-	private Player[] players;	
+	private Player[] players;
+
 	/**
 	 * Places the marker on right place
+	 * 
 	 * @param row
 	 * @param col
 	 * @param mark
@@ -23,108 +26,129 @@ public class TicTacToeGame {
 	private void setMarker(int row, int col, char mark) {
 		this.gameBoard[row][col] = mark;
 	}
+
+	/**
+	 * 
+	 * @param who
+	 * @return the marker of the player whose turn it is
+	 */
+	private char getWhoseMarker(int who) {
+		return turns % 2 == 0 ? PLAYER1 : PLAYER2;
+	}
+
 	public TicTacToeGame() {
 		this("Player1", "Player2");
-	}	
+	}
+
 	public TicTacToeGame(String player1, String player2) {
 		initGame();
 		this.players[0] = new Player(player1, 0);
 		this.players[1] = new Player(player2, 0);
 	}
+
 	/**
-	 *  Creates an 2d-array with stuff and shit
+	 * Creates an 2d-array with stuff and shit
 	 */
 	public void initGame() {
 		this.gameBoard = new char[SIZE][SIZE];
 		this.players = new Player[NR_OF_PLAYERS];
-		for(int i = 0; i < SIZE; i++) {
-			for(int j = 0; j < SIZE; j++) {
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
 				gameBoard[i][j] = EMPTYBOX;
 			}
 		}
 	}
+
 	/**
 	 * Returns the array as a string
+	 * 
 	 * @return the gameboard as a string
 	 */
 	public String gameBoardToString() {
 		String returnStr = "";
-		for(int i = 0; i < SIZE; i++){
-			for(int j = 0; j < SIZE; j++) {
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
 				returnStr += "[" + gameBoard[i][j] + "]";
 			}
 			returnStr += "\n";
 		}
 		return returnStr;
 	}
+
 	/**
 	 * Checks whether [row][col] is empty and places a new Mark there.
+	 * 
 	 * @param row
 	 * @param col
 	 * @throws Exception
 	 */
 	public void placeMarker(int row, int col) throws Exception {
-		if(this.gameBoard[row][col] != PLAYER1 && this.gameBoard[row][col] != PLAYER2) {
-			if(turns%2 == 0) { 
+		if (this.gameBoard[row][col] != PLAYER1
+				&& this.gameBoard[row][col] != PLAYER2) {
+			if (turns % 2 == 0) {
 				// player one
-				setMarker(row, col, PLAYER1);				
-			} else { 
+				setMarker(row, col, PLAYER1);
+			} else {
 				// player two
 				setMarker(row, col, PLAYER2);
 			}
 			turns++;
 		} else {
-			throw new Exception("The [" + row + "][" + col + "] was already taken");
+			throw new Exception("The [" + row + "][" + col
+					+ "] was already taken");
 		}
 	}
+
 	/**
+	 * 
 	 * Validates the gameboard and checks for three in row
+	 * 
+	 * @return whether someone has won
 	 */
-	public boolean validate(){
-		
+	public boolean validate() {
+
 		/*
-		r
-		o
-		w
-	col	   0  1  2
-		0 [0][0][0]
-		1 [0][0][0]
-        2 [0][0][0]
-      */
+		 * r o w col 0 1 2 0 [0][0][0] 1 [0][0][0] 2 [0][0][0]
+		 */
 		char mark = ' ';
 		boolean win = false;
-		for(int player = 0; player < NR_OF_PLAYERS - 1 && !win; player++) {
-			 mark = this.getWhoseMarker(player);
-			// TODO validate that this is true! :@		
-			for(int row = 0; row < SIZE; row++) {
-				if(this.gameBoard[row][0] == mark && this.gameBoard[row][1] == mark && this.gameBoard[row][2] == mark) {
+		for (int player = 0; player < NR_OF_PLAYERS - 1 && !win; player++) {
+			mark = this.getWhoseMarker(player);
+			// TODO validate that this is true! :@
+			for (int row = 0; row < SIZE; row++) {
+				if (this.gameBoard[row][0] == mark
+						&& this.gameBoard[row][1] == mark
+						&& this.gameBoard[row][2] == mark) {
 					// horizontal
 					win = true;
-				} else if(this.gameBoard[0][row] == mark && this.gameBoard[1][row] == mark && this.gameBoard[1][row] ==  mark && this.gameBoard[2][row] == mark) {
+				} else if (this.gameBoard[0][row] == mark
+						&& this.gameBoard[1][row] == mark
+						&& this.gameBoard[1][row] == mark
+						&& this.gameBoard[2][row] == mark) {
 					// vertical
 					win = true;
-				} 
+				}
 			}
-			// diagonal 
+			// diagonal
 			// TODO validate that this is true! :@
-			if (this.gameBoard[0][0] == mark && 
-				this.gameBoard[1][1] == mark &&
-				this.gameBoard[2][2] ==  mark) {				
+			if (this.gameBoard[0][0] == mark && this.gameBoard[1][1] == mark
+					&& this.gameBoard[2][2] == mark) {
 				win = true;
-			} else if(
-				this.gameBoard[2][2] == mark && 
-				this.gameBoard[1][1] == mark &&
-				this.gameBoard[2][2] ==  mark) {
+			} else if (this.gameBoard[2][2] == mark
+					&& this.gameBoard[1][1] == mark
+					&& this.gameBoard[2][2] == mark) {
 				win = true;
 			}
-			if(win) {
+			if (win) {
 				this.winner = this.players[player].getName() + " won the game!";
 			}
 		}
 		return win;
 	}
+
 	/**
 	 * resets the hole game
+	 * 
 	 * @param player1
 	 * @param player2
 	 */
@@ -133,28 +157,36 @@ public class TicTacToeGame {
 		players[0] = new Player(player1, 0);
 		players[1] = new Player(player1, 0);
 	}
+
 	public boolean isFull() {
 		return this.turns == SIZE * SIZE;
 	}
+
 	/**
 	 * 
 	 * @return name on the player whose turn it is
 	 */
-	public String WhoseTurn() {		
-		return turns%2 == 0 ? players[0].getName() : players[1].getName();
-	} 
-	public char getWhoseMarker(int who) {
-		return turns%2 == 0 ? PLAYER1 : PLAYER2;
+	public String WhoseTurn() {
+		return turns % 2 == 0 ? players[0].getName() : players[1].getName();
 	}
+
+	/**
+	 * 
+	 * @return string The player who has won after validate has validated
+	 */
 	public String getWhoWon() {
-		return this.winner;		
+		return this.winner;
 	}
+
 	@Override
 	public String toString() {
 		return "TicTackToeGame [gameBoard=" + Arrays.toString(gameBoard)
 				+ ", players=" + Arrays.toString(players) + "]";
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -166,7 +198,10 @@ public class TicTacToeGame {
 		result = prime * result + turns;
 		return result;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -192,12 +227,11 @@ public class TicTacToeGame {
 		}
 		return true;
 	}
+
 	/**
 	 * @return the turns
 	 */
 	public int getTurns() {
 		return turns;
 	}
-	
-	
 }
