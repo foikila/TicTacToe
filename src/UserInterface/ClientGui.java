@@ -56,7 +56,7 @@ public class ClientGui extends JFrame implements Serializable {
 		@Override
 		public void run() {
 			// disable buttons
-			changeButtons(false);
+			disableButtons(true);
 
 			// Get object from enemy
 			ObjectInputStream ois;
@@ -85,7 +85,7 @@ public class ClientGui extends JFrame implements Serializable {
 			}
 
 			// Visa att det är användarens tur och enablea knappar
-			changeButtons(true);
+			disableButtons(false);
 			System.out.println("Det är din tur...");
 		}
 	};
@@ -137,8 +137,7 @@ public class ClientGui extends JFrame implements Serializable {
 		if (this.isClient) {
 			try {
 				// Connectar till servern
-				clientSocket = new Socket("10.0.0.44", 4444);
-				// clientSocket = new Socket(this.ip, this.port);
+				clientSocket = new Socket(this.ip, this.port);
 				ObjectOutputStream oos;
 				int col = 0;
 				int row = 0;
@@ -197,9 +196,12 @@ public class ClientGui extends JFrame implements Serializable {
 	 * 
 	 * @param on
 	 */
-	private void changeButtons(Boolean on) {
+	private void disableButtons(Boolean on) {
+		// why not :D:D:D:D
+		on = on == false ? true : false;
 		for (int i = 0; i < this.btnArray.length; i++) {
 			for (int j = 0; j < this.btnArray.length; j++) {
+				System.out.println(on);
 				this.btnArray[i][j].setEnabled(on);
 			}
 		}
@@ -207,58 +209,40 @@ public class ClientGui extends JFrame implements Serializable {
 
 	public ClientGui(String frameTitle) {
 		this.frameTitle = frameTitle;
-		getIfServer();
+
 		initiateInstanceVaribales();
 		configFrame();
 		addComponentsToContentPane();
 		buildMenuBar();
+		getIfServer();
 	}
 
 	private void getIfServer() {
 		int an = JOptionPane.showConfirmDialog(null, "Connecting to someone?");
 		switch (an) {
-		case JOptionPane.NO_OPTION:
-			try {
-				JOptionPane.showMessageDialog(this, "Your ip is "
-						+ Inet4Address.getLocalHost().getHostAddress());
-			} catch (HeadlessException | UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			this.isClient = true;
-			break;
 		case JOptionPane.OK_OPTION:
-		default:
 			this.isClient = false;
 			// get ip and port and stuff
 			String ans = JOptionPane.showInputDialog("Host ip:");
 			this.ip = ans;
 			ans = JOptionPane.showInputDialog("Host port:");
 			this.port = Integer.parseInt(ans);
+
+			break;
+		default:
+		case JOptionPane.NO_OPTION:
+			try {
+				JOptionPane.showMessageDialog(this, "Your ip is "
+						+ Inet4Address.getLocalHost().getHostAddress()
+						+ ":4444");
+			} catch (HeadlessException | UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.isClient = true;
+			this.disableButtons(true);
 			break;
 		}
-	}
-
-	public void placeMarks(String e) {
-		int col = 0;
-		int row = 0;
-		String values[] = e.split(",");
-		col = Integer.parseInt(values[0]);
-		row = Integer.parseInt(values[1]);
-
-		try {
-			game.placeMarker(row, col);
-		} catch (Exception e1) {
-			JOptionPane.showMessageDialog(this, e1.getMessage());
-			// this.btnArray[row][col].setEnabled(false);
-		}
-
-		// Validera
-		if (game.validate()) {
-			System.out.println(game.getWhoWon());
-			System.out.println("Nr of turns played: " + game.getTurns());
-		}
-
 	}
 
 	/**
