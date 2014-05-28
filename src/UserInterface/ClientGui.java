@@ -7,6 +7,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
+
 import Game.TicTacToeGame;
 
 /**
@@ -63,6 +65,7 @@ public class ClientGui extends JFrame implements Serializable {
 			Network.Package p;
 			int row = -1;
 			int col = -1;
+			boolean win = false;
 			try {
 
 				ObjectInputStream ois = new ObjectInputStream(
@@ -74,6 +77,12 @@ public class ClientGui extends JFrame implements Serializable {
 
 				row = p.getRow();
 				col = p.getCol();
+				win = p.getWin();
+				if (win) {
+					JOptionPane.showMessageDialog(null, "The other player won.. the game is now ending");
+					System.exit(0);
+				}
+				
 				try {
 					// Place markers from enemy
 					game.placeMarker(row, col);
@@ -81,7 +90,6 @@ public class ClientGui extends JFrame implements Serializable {
 					updateGraphicalGameBoard();
 					if (game.validate()) {
 						JOptionPane.showMessageDialog(null, game.getWhoWon());
-						// TODO: Skicka till den andra personen att spelet är slut..
 						System.exit(0);
 					}
 				} catch (Exception e) {
@@ -130,25 +138,28 @@ public class ClientGui extends JFrame implements Serializable {
 				ObjectOutputStream oos;
 				int col = 0;
 				int row = 0;
-
+				boolean win = false;
 				updateGraphicalGameBoard();
-				if (game.validate()) {
+				/*if (game.validate()) {
 					JOptionPane.showMessageDialog(null, game.getWhoWon());
 					System.exit(0);
-				}
+				}*/
 				String values[] = e.getActionCommand().toString().split(",");
 				col = Integer.parseInt(values[0]);
 				row = Integer.parseInt(values[1]);
 
 				game.placeMarker(row, col);
+				
 				if (game.validate()) {
+					System.out.println("Dog här");
+					win = true;
 					JOptionPane.showMessageDialog(null, game.getWhoWon());
-					System.exit(0);
+					//System.exit(0);
 				}
 				updateGraphicalGameBoard();
 				try {
 					oos = new ObjectOutputStream(clientSocket.getOutputStream());
-					Network.Package p = new Network.Package(row, col);
+					Network.Package p = new Network.Package(row, col, win);
 					System.out.println(game.gameBoardToString());
 
 					// sending an object to the server
@@ -159,6 +170,10 @@ public class ClientGui extends JFrame implements Serializable {
 				// changes the state
 				amISending = false;
 				disableButtons(true);
+				
+				if (win) {
+					System.exit(0);
+				}
 				// Skapa ny tråd
 				new Thread(waiting).start();
 

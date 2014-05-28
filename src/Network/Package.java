@@ -18,11 +18,20 @@ public class Package implements Serializable {
 	}
 	
 	
+	public Package(int row, int col, boolean win) {
+		this.row = row;
+		this.col = col;
+		this.win = win;
+	}
 
 	public Package(int row, int col, Player player) {
 		this.row = row;
 		this.col = col;
 		this.player = player;
+	}
+	
+	public boolean getWin() {
+		return this.win;
 	}
 	public int getRow() {
 		return row;
