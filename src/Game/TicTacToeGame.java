@@ -120,7 +120,7 @@ public class TicTacToeGame {
 		 */
 		char mark = ' ';
 		boolean win = false;
-		for (int player = 0; player < NR_OF_PLAYERS - 1 && !win; player++) {
+		for (int player = 0; player < NR_OF_PLAYERS && !win; player++) {
 			mark = this.getWhoseMarker(player);
 
 			// horisontellt
@@ -163,8 +163,9 @@ public class TicTacToeGame {
 		}
 
 		if (win) {
-			this.winner = "Someone won!";
+			this.winner = mark + " won!";
 		}
+		
 		return win;
 	}
 

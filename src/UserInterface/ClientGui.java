@@ -81,6 +81,7 @@ public class ClientGui extends JFrame implements Serializable {
 					updateGraphicalGameBoard();
 					if (game.validate()) {
 						JOptionPane.showMessageDialog(null, game.getWhoWon());
+						// TODO: Skicka till den andra personen att spelet är slut..
 						System.exit(0);
 					}
 				} catch (Exception e) {
@@ -269,10 +270,10 @@ public class ClientGui extends JFrame implements Serializable {
 			this.amISending = false;
 			this.port = 4444;
 			try {
-				JOptionPane.showMessageDialog(this, "Your ip is "
-						+ Inet4Address.getLocalHost().getHostAddress()
-						+ ":4444");
-			} catch (HeadlessException | UnknownHostException e) {
+				JOptionPane.showMessageDialog(this, "Your ip is ");
+						//+ Inet4Address.getLocalHost().getHostAddress()
+						//+ ":4444");
+			} catch (HeadlessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

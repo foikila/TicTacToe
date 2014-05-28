@@ -10,17 +10,20 @@ public class Package implements Serializable {
 	private Player player;
 	private int row;
 	private int col;
+	private boolean win;
+	// TODO: Utöka med "WIN"
 
 	public Package(int row, int col) {
 		this(row, col, new Player());
 	}
+	
+	
 
 	public Package(int row, int col, Player player) {
 		this.row = row;
 		this.col = col;
 		this.player = player;
 	}
-
 	public int getRow() {
 		return row;
 	}
