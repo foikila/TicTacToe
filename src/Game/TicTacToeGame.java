@@ -138,18 +138,20 @@ public class TicTacToeGame {
 			}
 			// vertikalt
 			else if (this.gameBoard[0][0] == mark
-					&& this.gameBoard[0][1] == mark
-					&& this.gameBoard[0][2] == mark) {
+					&& this.gameBoard[1][0] == mark
+					&& this.gameBoard[2][0] == mark) {
 				win = true;
 			} else if (this.gameBoard[0][1] == mark
 					&& this.gameBoard[1][1] == mark
-					&& this.gameBoard[1][2] == mark) {
+					&& this.gameBoard[2][1] == mark) {
 				win = true;
 			} else if (this.gameBoard[0][2] == mark
 					&& this.gameBoard[1][2] == mark
 					&& this.gameBoard[2][2] == mark) {
 				win = true;
-			} else if (this.gameBoard[0][0] == mark
+			}
+
+			else if (this.gameBoard[0][0] == mark
 					&& this.gameBoard[1][1] == mark
 					&& this.gameBoard[2][2] == mark) {
 				win = true;
