@@ -120,33 +120,37 @@ public class TicTacToeGame {
 		 */
 		char mark = ' ';
 		boolean win = false;
-		for (int player = 0; player < NR_OF_PLAYERS - 1 && !win; player++) {
-			mark = this.getWhoseMarker(player);
+		// horisontellt
+		if (this.gameBoard[0][1] == this.gameBoard[0][2]
+				&& this.gameBoard[0][1] == this.gameBoard[0][0]) {
+			win = true;
+		} else if (this.gameBoard[1][0] == this.gameBoard[1][2]
+				&& this.gameBoard[1][1] == this.gameBoard[1][0]) {
+			win = true;
+		} else if (this.gameBoard[2][0] == this.gameBoard[2][2]
+				&& this.gameBoard[2][1] == this.gameBoard[2][0]) {
+			win = true;
+		}
+		// vertikalt
+		else if (this.gameBoard[0][0] == this.gameBoard[0][1]
+				&& this.gameBoard[0][1] == this.gameBoard[0][2]) {
+			win = true;
+		} else if (this.gameBoard[0][1] == this.gameBoard[1][1]
+				&& this.gameBoard[1][1] == this.gameBoard[1][2]) {
+			win = true;
+		} else if (this.gameBoard[0][2] == this.gameBoard[1][2]
+				&& this.gameBoard[2][2] == this.gameBoard[1][2]) {
+			win = true;
+		} else if (this.gameBoard[0][0] == this.gameBoard[1][1]
+				&& this.gameBoard[1][1] == this.gameBoard[2][2]) {
+			win = true;
+		} else if (this.gameBoard[0][2] == this.gameBoard[1][1]
+				&& this.gameBoard[2][0] == this.gameBoard[1][1]) {
+			win = true;
+		}
 
-			for (int row = 0; row < SIZE; row++) {
-
-				if (this.gameBoard[row][0] == mark
-						&& this.gameBoard[row][1] == mark
-						&& this.gameBoard[row][2] == mark) {
-					win = true;
-				} else if (this.gameBoard[0][row] == mark
-						&& this.gameBoard[1][row] == mark
-						&& this.gameBoard[2][row] == mark) {
-					win = true;
-				}
-			}
-			// diagonal
-			if (this.gameBoard[0][0] == mark && this.gameBoard[1][1] == mark
-					&& this.gameBoard[2][2] == mark) {
-				win = true;
-			} else if (this.gameBoard[2][2] == mark
-					&& this.gameBoard[1][1] == mark
-					&& this.gameBoard[2][2] == mark) {
-				win = true;
-			}
-			if (win) {
-				this.winner = "Someone won!";
-			}
+		if (win) {
+			this.winner = "Someone won!";
 		}
 		return win;
 	}
