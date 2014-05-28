@@ -120,33 +120,40 @@ public class TicTacToeGame {
 		 */
 		char mark = ' ';
 		boolean win = false;
-		// horisontellt
-		if (this.gameBoard[0][1] == this.gameBoard[0][2]
-				&& this.gameBoard[0][1] == this.gameBoard[0][0]) {
-			win = true;
-		} else if (this.gameBoard[1][0] == this.gameBoard[1][2]
-				&& this.gameBoard[1][1] == this.gameBoard[1][0]) {
-			win = true;
-		} else if (this.gameBoard[2][0] == this.gameBoard[2][2]
-				&& this.gameBoard[2][1] == this.gameBoard[2][0]) {
-			win = true;
-		}
-		// vertikalt
-		else if (this.gameBoard[0][0] == this.gameBoard[0][1]
-				&& this.gameBoard[0][1] == this.gameBoard[0][2]) {
-			win = true;
-		} else if (this.gameBoard[0][1] == this.gameBoard[1][1]
-				&& this.gameBoard[1][1] == this.gameBoard[1][2]) {
-			win = true;
-		} else if (this.gameBoard[0][2] == this.gameBoard[1][2]
-				&& this.gameBoard[2][2] == this.gameBoard[1][2]) {
-			win = true;
-		} else if (this.gameBoard[0][0] == this.gameBoard[1][1]
-				&& this.gameBoard[1][1] == this.gameBoard[2][2]) {
-			win = true;
-		} else if (this.gameBoard[0][2] == this.gameBoard[1][1]
-				&& this.gameBoard[2][0] == this.gameBoard[1][1]) {
-			win = true;
+		for (int player = 0; player < NR_OF_PLAYERS - 1 && !win; player++) {
+			mark = this.getWhoseMarker(player);
+
+			// horisontellt
+			if (this.gameBoard[0][1] == this.gameBoard[0][2]
+					&& this.gameBoard[0][1] == this.gameBoard[0][0]
+					&& this.gameBoard[0][1] == mark) {
+				win = true;
+			} else if (this.gameBoard[1][0] == this.gameBoard[1][2]
+					&& this.gameBoard[1][1] == this.gameBoard[1][0]
+					&& this.gameBoard[1][0] == mark) {
+				win = true;
+			} else if (this.gameBoard[2][0] == this.gameBoard[2][2]
+					&& this.gameBoard[2][1] == this.gameBoard[2][0]
+					&& this.gameBoard[2][0] == mark) {
+				win = true;
+			}
+			// vertikalt
+			else if (this.gameBoard[0][0] == this.gameBoard[0][1]
+					&& this.gameBoard[0][1] == this.gameBoard[0][2]) {
+				win = true;
+			} else if (this.gameBoard[0][1] == this.gameBoard[1][1]
+					&& this.gameBoard[1][1] == this.gameBoard[1][2]) {
+				win = true;
+			} else if (this.gameBoard[0][2] == this.gameBoard[1][2]
+					&& this.gameBoard[2][2] == this.gameBoard[1][2]) {
+				win = true;
+			} else if (this.gameBoard[0][0] == this.gameBoard[1][1]
+					&& this.gameBoard[1][1] == this.gameBoard[2][2]) {
+				win = true;
+			} else if (this.gameBoard[0][2] == this.gameBoard[1][1]
+					&& this.gameBoard[2][0] == this.gameBoard[1][1]) {
+				win = true;
+			}
 		}
 
 		if (win) {
