@@ -10,21 +10,18 @@ import javax.swing.*;
 import Game.TicTacToeGame;
 
 /**
- * 
- */
-
-/**
  * @author Jonatan Karlsson & Henrik Ölund
  * @year 2014
  * @version 0.1
  */
 public class ClientGui extends JFrame implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 787111024491775161L;
 	/**
 	 * Constant for easy configuration
 	 */
 	private static final boolean RESIZEBLE = false;
 	private static final int DEFAULT_CLOSE_OPERATION = WindowConstants.EXIT_ON_CLOSE;
+	private static final int PORT = 4444;
 
 	/**
 	 * Javax.swings
@@ -54,8 +51,11 @@ public class ClientGui extends JFrame implements Serializable {
 	/**
 	 * Runnables
 	 */
-	/*
+
+	/**
+	 * Listen to the socket and places markes
 	 * 
+	 * @return void
 	 */
 	private Runnable waiting = new Runnable() {
 		@Override
@@ -97,7 +97,11 @@ public class ClientGui extends JFrame implements Serializable {
 			amISending = true;
 		}
 	};
-
+	/**
+	 * Accepts a connection and starts waiting..
+	 * 
+	 * @return void
+	 */
 	private Runnable accept = new Runnable() {
 		@Override
 		public void run() {
@@ -117,6 +121,10 @@ public class ClientGui extends JFrame implements Serializable {
 	 * 
 	 */
 	private class ButtonListener implements ActionListener {
+		/**
+		 * 
+		 * @param event
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
@@ -164,6 +172,12 @@ public class ClientGui extends JFrame implements Serializable {
 	}
 
 	private class MenuListener implements ActionListener {
+		/**
+		 * [actionPerformed description]
+		 * 
+		 * @param e
+		 *            [description]
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			switch (e.getActionCommand()) {
@@ -181,10 +195,7 @@ public class ClientGui extends JFrame implements Serializable {
 	}
 
 	/**
-	 * Sets the icon of the buttons.
-	 * 
-	 * @param row
-	 * @param col
+	 * Updates the gameboard layout
 	 */
 	public void updateGraphicalGameBoard() {
 		for (int row = 0; row < btnArray.length; row++) {
@@ -202,9 +213,10 @@ public class ClientGui extends JFrame implements Serializable {
 	}
 
 	/**
-	 * Sets the buttons to enable/disable
+	 * Disables the buttons. this is called when it's listening
 	 * 
 	 * @param on
+	 *            Boolean
 	 */
 	private void disableButtons(Boolean on) {
 		// why not :D:D:D:D
@@ -216,6 +228,11 @@ public class ClientGui extends JFrame implements Serializable {
 		}
 	}
 
+	/**
+	 * constructor all
+	 * 
+	 * @param frameTitle
+	 */
 	public ClientGui(String frameTitle) {
 		this.frameTitle = frameTitle;
 		initiateInstanceVaribales();
@@ -240,6 +257,9 @@ public class ClientGui extends JFrame implements Serializable {
 		}
 	}
 
+	/**
+	 * Gets if it is a server
+	 */
 	private void getIfServer() {
 		int an = JOptionPane.showConfirmDialog(null, "Connecting to someone?");
 		switch (an) {
@@ -249,19 +269,16 @@ public class ClientGui extends JFrame implements Serializable {
 			// get ip and port and stuff
 			String ans = JOptionPane.showInputDialog("Host ip:");
 			this.ip = ans;
-			ans = JOptionPane.showInputDialog("Host port:");
-			this.port = Integer.parseInt(ans);
 			break;
 		default:
 		case JOptionPane.NO_OPTION:
 			this.amISending = false;
-			this.port = 4444;
+			this.port = PORT;
 			try {
 				JOptionPane.showMessageDialog(this, "Your ip is "
-						+ Inet4Address.getLocalHost().getHostAddress()
-						+ ":4444");
+						+ Inet4Address.getLocalHost().getHostAddress() + ":"
+						+ PORT);
 			} catch (HeadlessException | UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			this.isClient = false;
@@ -271,9 +288,9 @@ public class ClientGui extends JFrame implements Serializable {
 	}
 
 	/**
-	 * Builds the buttons for the game
+	 * Builds the buttons
 	 * 
-	 * @return
+	 * @return JPanel
 	 */
 	private JPanel buildButtons() {
 		JPanel buttonArea = new JPanel();
@@ -380,6 +397,9 @@ public class ClientGui extends JFrame implements Serializable {
 		this.setDefaultCloseOperation(DEFAULT_CLOSE_OPERATION);
 	}
 
+	/**
+	 * 
+	 */
 	public static void main(String args[]) {
 		ClientGui gui = new ClientGui("Tic-Tac-Toe");
 		gui.setVisible(true);
