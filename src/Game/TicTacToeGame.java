@@ -124,34 +124,38 @@ public class TicTacToeGame {
 			mark = this.getWhoseMarker(player);
 
 			// horisontellt
-			if (this.gameBoard[0][1] == this.gameBoard[0][2]
-					&& this.gameBoard[0][1] == this.gameBoard[0][0]
+			if (this.gameBoard[0][2] == mark && this.gameBoard[0][0] == mark
 					&& this.gameBoard[0][1] == mark) {
 				win = true;
-			} else if (this.gameBoard[1][0] == this.gameBoard[1][2]
-					&& this.gameBoard[1][1] == this.gameBoard[1][0]
-					&& this.gameBoard[1][0] == mark) {
+			} else if (this.gameBoard[1][0] == mark
+					&& this.gameBoard[1][2] == mark
+					&& this.gameBoard[1][1] == mark) {
 				win = true;
-			} else if (this.gameBoard[2][0] == this.gameBoard[2][2]
-					&& this.gameBoard[2][1] == this.gameBoard[2][0]
-					&& this.gameBoard[2][0] == mark) {
+			} else if (this.gameBoard[2][0] == mark
+					&& this.gameBoard[2][2] == mark
+					&& this.gameBoard[2][1] == mark) {
 				win = true;
 			}
 			// vertikalt
-			else if (this.gameBoard[0][0] == this.gameBoard[0][1]
-					&& this.gameBoard[0][1] == this.gameBoard[0][2]) {
+			else if (this.gameBoard[0][0] == mark
+					&& this.gameBoard[0][1] == mark
+					&& this.gameBoard[0][2] == mark) {
 				win = true;
-			} else if (this.gameBoard[0][1] == this.gameBoard[1][1]
-					&& this.gameBoard[1][1] == this.gameBoard[1][2]) {
+			} else if (this.gameBoard[0][1] == mark
+					&& this.gameBoard[1][1] == mark
+					&& this.gameBoard[1][2] == mark) {
 				win = true;
-			} else if (this.gameBoard[0][2] == this.gameBoard[1][2]
-					&& this.gameBoard[2][2] == this.gameBoard[1][2]) {
+			} else if (this.gameBoard[0][2] == mark
+					&& this.gameBoard[1][2] == mark
+					&& this.gameBoard[2][2] == mark) {
 				win = true;
-			} else if (this.gameBoard[0][0] == this.gameBoard[1][1]
-					&& this.gameBoard[1][1] == this.gameBoard[2][2]) {
+			} else if (this.gameBoard[0][0] == mark
+					&& this.gameBoard[1][1] == mark
+					&& this.gameBoard[2][2] == mark) {
 				win = true;
-			} else if (this.gameBoard[0][2] == this.gameBoard[1][1]
-					&& this.gameBoard[2][0] == this.gameBoard[1][1]) {
+			} else if (this.gameBoard[0][2] == mark
+					&& this.gameBoard[1][1] == mark
+					&& this.gameBoard[2][0] == mark) {
 				win = true;
 			}
 		}
