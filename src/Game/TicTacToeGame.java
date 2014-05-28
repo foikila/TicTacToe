@@ -163,7 +163,7 @@ public class TicTacToeGame {
 		}
 
 		if (win) {
-			this.winner = mark + " won!";
+			this.winner = "YOU ARE THE WINNER!";
 		}
 		
 		return win;
