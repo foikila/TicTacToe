@@ -21,7 +21,6 @@ public class ClientGui extends JFrame implements Serializable {
 	 */
 	private static final boolean RESIZEBLE = false;
 	private static final int DEFAULT_CLOSE_OPERATION = WindowConstants.EXIT_ON_CLOSE;
-	private static final int PORT = 4444;
 
 	/**
 	 * Javax.swings
@@ -51,10 +50,9 @@ public class ClientGui extends JFrame implements Serializable {
 	/**
 	 * Runnables
 	 */
-
+	
 	/**
-	 * Listen to the socket and places markes
-	 * 
+	 * Listen to the socket and places markes 
 	 * @return void
 	 */
 	private Runnable waiting = new Runnable() {
@@ -99,7 +97,6 @@ public class ClientGui extends JFrame implements Serializable {
 	};
 	/**
 	 * Accepts a connection and starts waiting..
-	 * 
 	 * @return void
 	 */
 	private Runnable accept = new Runnable() {
@@ -174,9 +171,7 @@ public class ClientGui extends JFrame implements Serializable {
 	private class MenuListener implements ActionListener {
 		/**
 		 * [actionPerformed description]
-		 * 
-		 * @param e
-		 *            [description]
+		 * @param e [description]
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -213,10 +208,8 @@ public class ClientGui extends JFrame implements Serializable {
 	}
 
 	/**
-	 * Disables the buttons. this is called when it's listening
-	 * 
-	 * @param on
-	 *            Boolean
+	 * Disables the buttons. this is called when it's listening 
+	 * @param on Boolean
 	 */
 	private void disableButtons(Boolean on) {
 		// why not :D:D:D:D
@@ -230,8 +223,7 @@ public class ClientGui extends JFrame implements Serializable {
 
 	/**
 	 * constructor all
-	 * 
-	 * @param frameTitle
+	 * @param  frameTitle            
 	 */
 	public ClientGui(String frameTitle) {
 		this.frameTitle = frameTitle;
@@ -256,9 +248,9 @@ public class ClientGui extends JFrame implements Serializable {
 			System.exit(0);
 		}
 	}
-
+	
 	/**
-	 * Gets if it is a server
+	 * Gets if it is a server 
 	 */
 	private void getIfServer() {
 		int an = JOptionPane.showConfirmDialog(null, "Connecting to someone?");
@@ -269,16 +261,19 @@ public class ClientGui extends JFrame implements Serializable {
 			// get ip and port and stuff
 			String ans = JOptionPane.showInputDialog("Host ip:");
 			this.ip = ans;
+			ans = JOptionPane.showInputDialog("Host port:");
+			this.port = Integer.parseInt(ans);
 			break;
 		default:
 		case JOptionPane.NO_OPTION:
 			this.amISending = false;
-			this.port = PORT;
+			this.port = 4444;
 			try {
 				JOptionPane.showMessageDialog(this, "Your ip is "
-						+ Inet4Address.getLocalHost().getHostAddress() + ":"
-						+ PORT);
+						+ Inet4Address.getLocalHost().getHostAddress()
+						+ ":4444");
 			} catch (HeadlessException | UnknownHostException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			this.isClient = false;
@@ -288,8 +283,7 @@ public class ClientGui extends JFrame implements Serializable {
 	}
 
 	/**
-	 * Builds the buttons
-	 * 
+	 * Builds the buttons 
 	 * @return JPanel
 	 */
 	private JPanel buildButtons() {
@@ -396,9 +390,10 @@ public class ClientGui extends JFrame implements Serializable {
 		this.setResizable(RESIZEBLE);
 		this.setDefaultCloseOperation(DEFAULT_CLOSE_OPERATION);
 	}
-
+	
 	/**
-	 * 
+	 * [main description]
+	 * @param args[] [description]
 	 */
 	public static void main(String args[]) {
 		ClientGui gui = new ClientGui("Tic-Tac-Toe");
