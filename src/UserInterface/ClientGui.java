@@ -77,16 +77,18 @@ public class ClientGui extends JFrame implements Serializable {
 				row = p.getRow();
 				col = p.getCol();
 				win = p.getWin();
-				if (win) {
-					JOptionPane.showMessageDialog(null, "The other player won.. the game is now ending");
-					System.exit(0);
-				}
+				
 				
 				try {
 					// Place markers from enemy
 					game.placeMarker(row, col);
 					// Update gui.
 					updateGraphicalGameBoard();
+					
+					if (win) {
+						JOptionPane.showMessageDialog(null, "The other player won.. the game is now ending");
+						System.exit(0);
+					}
 					if (game.validate()) {
 						JOptionPane.showMessageDialog(null, game.getWhoWon());
 						System.exit(0);
