@@ -7,7 +7,6 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import com.sun.java.swing.plaf.windows.resources.windows;
 
 import Game.TicTacToeGame;
 
