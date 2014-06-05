@@ -7,7 +7,6 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-
 import Game.TicTacToeGame;
 
 /**
@@ -141,10 +140,7 @@ public class ClientGui extends JFrame implements Serializable {
 				int row = 0;
 				boolean win = false;
 				updateGraphicalGameBoard();
-				/*if (game.validate()) {
-					JOptionPane.showMessageDialog(null, game.getWhoWon());
-					System.exit(0);
-				}*/
+
 				String values[] = e.getActionCommand().toString().split(",");
 				col = Integer.parseInt(values[0]);
 				row = Integer.parseInt(values[1]);
@@ -286,10 +282,10 @@ public class ClientGui extends JFrame implements Serializable {
 			this.amISending = false;
 			this.port = 4444;
 			try {
-				JOptionPane.showMessageDialog(this, "Your ip is ");
-						//+ Inet4Address.getLocalHost().getHostAddress()
-						//+ ":4444");
-			} catch (HeadlessException e) {
+				JOptionPane.showMessageDialog(this, "Your ip is "
+						+ Inet4Address.getLocalHost().getHostAddress()
+						+ ":4444");
+			} catch (HeadlessException | UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
