@@ -119,39 +119,34 @@ public class TicTacToeGame {
 		 * r o w col 0 1 2 0 [0][0][0] 1 [0][0][0] 2 [0][0][0]
 		 */
 		char mark = ' ';
-		boolean win = false;
+
 		for (int player = 0; player < NR_OF_PLAYERS && !win; player++) {
 			mark = this.getWhoseMarker(player);
 
-			// winLines = Horizontal, Vertical, Diagonal
-			int[][] winLines = {{0,1,2},{3,4,5},{6,7,8}, {0,3,6},{1,4,7},{2,5,8}, {0,4,8},{2,4,6}};
-			int k = 0;
+			int[][] winLines = {
+					{0,1,2},{3,4,5},{6,7,8}, // Horizontal
+					{0,3,6},{1,4,7},{2,5,8}, // Vertical
+					{0,4,8},{2,4,6}};		 //Diagonal
+			int match = 0;
 
-			//Foreach winning line
+
 			for (int[] winLine : winLines) {
-				// marks in a row = k
-				k = 0;
+				match = 0;
 
-				//Foreach box on the line
-				for (int box : winLine) {
-					int row = Math.floorDiv(box, 3);
-					int col = Math.floorMod(box, 3);
+				for (int cell : winLine) {
+					int row = Math.floorDiv(cell, 3);
+					int col = Math.floorMod(cell, 3);
 					if (this.gameBoard[row][col] == mark) {
-						k++;
+						match++;
 					}
 				}
-				if (k == 3) {
-					win = true;
-					break;
+				if (match == 3) {
+					this.winner = "YOU ARE THE WINNER!";
+					return true;
 				}
 			}
 		}
-
-		if (win) {
-			this.winner = "YOU ARE THE WINNER!";
-		}
-
-		return win;
+		return false;
 	}
 
 	/**
