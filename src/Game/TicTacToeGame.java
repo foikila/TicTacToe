@@ -119,16 +119,15 @@ public class TicTacToeGame {
 		 * r o w col 0 1 2 0 [0][0][0] 1 [0][0][0] 2 [0][0][0]
 		 */
 		char mark = ' ';
+        int match = 0;
+        int[][] winLines = {
+                {0,1,2},{3,4,5},{6,7,8}, // Horizontal
+                {0,3,6},{1,4,7},{2,5,8}, // Vertical
+                {0,4,8},{2,4,6}};		 //Diagonal
 
-		for (int player = 0; player < NR_OF_PLAYERS && !win; player++) {
+
+		for (int player = 0; player < NR_OF_PLAYERS; player++) {
 			mark = this.getWhoseMarker(player);
-
-			int[][] winLines = {
-					{0,1,2},{3,4,5},{6,7,8}, // Horizontal
-					{0,3,6},{1,4,7},{2,5,8}, // Vertical
-					{0,4,8},{2,4,6}};		 //Diagonal
-			int match = 0;
-
 
 			for (int[] winLine : winLines) {
 				match = 0;
