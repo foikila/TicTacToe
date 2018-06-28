@@ -123,55 +123,40 @@ public class TicTacToeGame {
 		for (int player = 0; player < NR_OF_PLAYERS && !win; player++) {
 			mark = this.getWhoseMarker(player);
 
-			// horisontellt
-			if (this.gameBoard[0][2] == mark && this.gameBoard[0][0] == mark
-					&& this.gameBoard[0][1] == mark) {
-				win = true;
-			} else if (this.gameBoard[1][0] == mark
-					&& this.gameBoard[1][2] == mark
-					&& this.gameBoard[1][1] == mark) {
-				win = true;
-			} else if (this.gameBoard[2][0] == mark
-					&& this.gameBoard[2][2] == mark
-					&& this.gameBoard[2][1] == mark) {
-				win = true;
-			}
-			// vertikalt
-			else if (this.gameBoard[0][0] == mark
-					&& this.gameBoard[1][0] == mark
-					&& this.gameBoard[2][0] == mark) {
-				win = true;
-			} else if (this.gameBoard[0][1] == mark
-					&& this.gameBoard[1][1] == mark
-					&& this.gameBoard[2][1] == mark) {
-				win = true;
-			} else if (this.gameBoard[0][2] == mark
-					&& this.gameBoard[1][2] == mark
-					&& this.gameBoard[2][2] == mark) {
-				win = true;
-			}
+			// winLines = Horizontal, Vertical, Diagonal
+			int[][] winLines = {{0,1,2},{3,4,5},{6,7,8}, {0,3,6},{1,4,7},{2,5,8}, {0,4,8},{2,4,6}};
+			int k = 0;
 
-			else if (this.gameBoard[0][0] == mark
-					&& this.gameBoard[1][1] == mark
-					&& this.gameBoard[2][2] == mark) {
-				win = true;
-			} else if (this.gameBoard[0][2] == mark
-					&& this.gameBoard[1][1] == mark
-					&& this.gameBoard[2][0] == mark) {
-				win = true;
+			//Foreach winning line
+			for (int[] winLine : winLines) {
+				// marks in a row = k
+				k = 0;
+
+				//Foreach box on the line
+				for (int box : winLine) {
+					int row = Math.floorDiv(box, 3);
+					int col = Math.floorMod(box, 3);
+					if (this.gameBoard[row][col] == mark) {
+						k++;
+					}
+				}
+				if (k == 3) {
+					win = true;
+					break;
+				}
 			}
 		}
 
 		if (win) {
 			this.winner = "YOU ARE THE WINNER!";
 		}
-		
+
 		return win;
 	}
 
 	/**
-	 * resets the hole game
-	 * 
+	 * resets the whole game
+	 *
 	 * @param player1
 	 * @param player2
 	 */
